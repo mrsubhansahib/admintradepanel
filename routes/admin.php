@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CmsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -321,6 +322,15 @@ Route::middleware('admin')->group(function () {
             Route::post('frontend-element-seo/{key}/{id}', 'frontendSeoUpdate');
             Route::post('remove/{id}', 'remove')->name('remove');
         });
+        //Cms Builder
+        Route::controller(CmsController::class)->name('cms')->group(function () {
+            Route::get('/', 'index')->name('.index');
+            Route::get('manage/{id}', 'edit')->name('.edit');
+            Route::post('manage/{id}', 'update')->name('.update');
+            Route::post('manage', 'store')->name('.store');
+            Route::post('delete/{id}', 'delete')->name('.delete');
+        });
+
 
         // Page Builder
         Route::controller('PageBuilderController')->group(function () {

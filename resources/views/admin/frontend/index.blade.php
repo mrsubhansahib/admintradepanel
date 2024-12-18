@@ -1,4 +1,7 @@
 @extends('admin.layouts.app')
+@push('breadcrumb-plugins')
+    <button type="button" class="btn btn-sm btn-outline--primary" onclick="window.location.href='{{route('admin.frontend.cms.index')}}'"><i class="las la-plus"></i>@lang('Add New')</button>
+@endpush
 @section('panel')
     <div class="row gy-4">
         <div class="col-12">
