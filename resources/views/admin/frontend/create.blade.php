@@ -1,15 +1,16 @@
 @extends('admin.layouts.app')
 
 @section('panel')
-        <div class="row">
-            <div class="col-lg-12 col-md-12 mb-30">
-                <div class="card">
-                    <div class="card-body">
-                        <h1>Heelo nifty</h1>
-                    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 mb-30">
+            <div class="card">
+                <div class="card-body p-0">
+                    <!-- GrapesJS Editor Container -->
+                    <div id="gjs" style="height: 500px; border: 1px solid #ddd;"></div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection
 
 @push('breadcrumb-plugins')
@@ -20,7 +21,6 @@
 
 @push('style-lib')
     <link href="{{ asset('assets/cms/grapes.min.css') }}" rel="stylesheet">
-
 @endpush
 
 @push('script-lib')
@@ -31,44 +31,32 @@
     <script>
         (function($) {
             "use strict";
-            $('.addBtn').on('click', function() {
-                var modal = $('#addModal');
-                modal.modal('show');
+
+            // Initialize GrapesJS
+            const editor = grapesjs.init({
+                container: '#gjs', // Target container for the editor
+                height: '500px', // Editor height
+                width: 'auto', // Editor width (responsive)
+                fromElement: true, // Use the existing HTML as content
+                storageManager: {
+                    type: 'local', // Save data locally for testing
+                    autosave: true,
+                    autoload: true,
+                },
+                plugins: ['gjs-blocks-basic'], // Basic blocks plugin
+                pluginsOpts: {
+                    'gjs-blocks-basic': {}, // Plugin options if needed
+                },
+                blockManager: {
+                    appendTo: '#blocks', // Optional: Create a custom block panel
+                },
             });
 
-            $(document).on('click', '.updateBtn', function() {
-                var modal = $('#updateBtn');
-                modal.find('input[name=id]').val($(this).data('id'));
-
-                var obj = $(this).data('all');
-                var images = $(this).data('images');
-
-                var imagePreviews = modal.find('.image-upload-preview');
-
-
-                if (images) {
-
-                    for (var i = 0; i < images.length; i++) {
-
-                        var imgloc = images[i];
-                        $(imagePreviews[i]).css("background-image", "url(" + imgloc + ")");
-                    }
-                }
-                $.each(obj, function(index, value) {
-                    modal.find('[name=' + index + ']').val(value);
-                });
-                modal.modal('show');
-            });
-
-            $('#updateBtn').on('shown.bs.modal', function(e) {
-                $(document).off('focusin.modal');
-            });
-            $('#addModal').on('shown.bs.modal', function(e) {
-                $(document).off('focusin.modal');
-            });
-            $('.iconPicker').iconpicker().on('iconpickerSelected', function(e) {
-                $(this).closest('.form-group').find('.iconpicker-input').val(
-                    `<i class="${e.iconpickerValue}"></i>`);
+            // Optional: Adding custom blocks
+            editor.BlockManager.add('test-block', {
+                label: 'Test Block',
+                content: '<div style="padding:20px; background-color: #eee;">Test Block Content</div>',
+                category: 'Basic',
             });
         })(jQuery);
     </script>
